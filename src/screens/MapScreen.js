@@ -1,0 +1,38 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+
+const MapScreen = () => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>🗺️ Airbnb Location</Text>
+      <Text style={styles.subtitle}>Santa Fe Adobe Casita</Text>
+      <Text style={styles.emoji}>🏠🌵</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFF8DC',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#ba005f', // Updated magenta
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#777c3e', // Updated olive
+    marginBottom: 20,
+  },
+  emoji: {
+    fontSize: 40,
+  },
+});
+
+export default MapScreen;
