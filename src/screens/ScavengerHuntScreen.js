@@ -1008,7 +1008,6 @@ const ScavengerHuntScreen = () => {
                   <Text style={styles.loginButtonText}>Start Hunt</Text>
                 </TouchableOpacity>
                 
-                <Text style={styles.loginHint}>Hint: Where the wolves howl! 🐺</Text>
               </View>
             </View>
           ) : (
