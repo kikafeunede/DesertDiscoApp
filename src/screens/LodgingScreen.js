@@ -9,7 +9,7 @@ const colors = {
   plum: '#782946',
   oliveGreen: '#777c3e',
   magenta: '#ba005f',
-  background: '#FFF8DC',
+  background: '#F5F1E8',
   text: '#2F4F4F',
 };
 

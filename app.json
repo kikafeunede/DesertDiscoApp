@@ -1,38 +1,38 @@
 {
   "expo": {
-    "name": "DesertDiscoApp",
-    "slug": "DesertDiscoApp",
-    "version": "4.0.0",
+    "name": "Desert Disco",
+    "slug": "desert-disco-app",
+    "version": "5.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.kika.desertdisco",
+      "bundleIdentifier": "com.franxesca.desertdisco",
+      "buildNumber": "5",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false,
-      "buildNumber": "4"
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "edgeToEdgeEnabled": true
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [],
+    "sdkVersion": "52.0.0",
     "extra": {
       "eas": {
-        "projectId": "74866c63-136a-4961-b2c9-5a7d462ae68b"
+        "projectId": "7270f933-501a-43c7-85b2-7d78e884deeb"
       }
     }
   }

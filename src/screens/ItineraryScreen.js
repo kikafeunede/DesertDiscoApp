@@ -1,7 +1,9 @@
 // src/screens/ItineraryScreen.js
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import UserHeader from '../components/UserHeader';
 
 const colors = {
   chartreuse: '#bcaa01',
@@ -9,115 +11,287 @@ const colors = {
   plum: '#782946',
   oliveGreen: '#777c3e',
   magenta: '#ba005f',
-  background: '#FFF8DC',
+  background: '#F5F1E8',
   text: '#2F4F4F',
 };
 
 const ItineraryScreen = () => {
-  const [itinerary] = useState([
-    {
-      id: 1,
-      day: 'Thursday',
-      date: 'January 16, 2025',
-      events: [
-        { time: '6:00 PM', activity: 'Arrival & Check-in', location: 'La Dea Santa Fe', icon: '🏠' },
-        { time: '7:30 PM', activity: 'Grocery Run & Dinner Prep', location: 'Whole Foods Market', icon: '🛒' },
-        { time: '9:00 PM', activity: 'Settle In & Early Rest', location: 'La Dea', icon: '😴' },
-      ]
-    },
-    {
-      id: 2,
-      day: 'Friday',
-      date: 'January 17, 2025',
-      events: [
-        { time: '9:00 AM', activity: 'Breakfast & Coffee', location: 'La Dea', icon: '☕' },
-        { time: '10:30 AM', activity: 'Explore Downtown Santa Fe', location: 'Santa Fe Plaza', icon: '🚶‍♀️' },
-        { time: '1:00 PM', activity: 'Lunch', location: 'The Shed Restaurant', icon: '🌮' },
-        { time: '3:00 PM', activity: 'Canyon Road Art Walk', location: 'Canyon Road', icon: '🎨' },
-        { time: '6:00 PM', activity: 'Dinner Prep at Home', location: 'La Dea', icon: '👩‍🍳' },
-        { time: '8:00 PM', activity: '🤫 Secret Special Event', location: 'La Dea (cozy clothes!)', icon: '✨' },
-      ]
-    },
-    {
-      id: 3,
-      day: 'Saturday',
-      date: 'January 18, 2025',
-      events: [
-        { time: '8:00 AM', activity: 'Morning Hike', location: 'Atalaya Mountain Trail', icon: '🥾' },
-        { time: '11:00 AM', activity: 'Post-Hike Brunch', location: 'Café Pasqual\'s', icon: '🥞' },
-        { time: '1:00 PM', activity: 'Walk Around Town & Shopping', location: 'Santa Fe Plaza Area', icon: '🛍️' },
-        { time: '4:00 PM', activity: 'Rest & Get Ready', location: 'La Dea', icon: '💄' },
-        { time: '7:00 PM', activity: 'Dinner Out', location: 'Geronimo Restaurant', icon: '🍽️' },
-        { time: '9:30 PM', activity: 'Night Out!', location: 'Downtown Santa Fe', icon: '🍸' },
-      ]
-    },
-    {
-      id: 4,
-      day: 'Sunday',
-      date: 'January 19, 2025',
-      events: [
-        { time: '9:30 AM', activity: 'Leisurely Walk', location: 'Railyard District', icon: '🚶‍♀️' },
-        { time: '11:00 AM', activity: 'Hot Springs Adventure', location: 'Ten Thousand Waves', icon: '♨️' },
-        { time: '2:00 PM', activity: 'Lunch in Town', location: 'Harry\'s Roadhouse', icon: '🍔' },
-        { time: '4:00 PM', activity: 'Rest & Pack', location: 'La Dea', icon: '🧳' },
-        { time: '6:00 PM', activity: 'Meow Wolf Experience', location: 'Meow Wolf Santa Fe', icon: '🌈' },
-        { time: '9:00 PM', activity: 'Farewell Dinner', location: 'Local favorite TBD', icon: '🥂' },
-      ]
-    }
-  ]);
-
-  const handleEventPress = (event) => {
-    Alert.alert(
-      event.activity,
-      `${event.icon} Time: ${event.time}\n📍 Location: ${event.location}`,
-      [
-        { text: 'Set Reminder', onPress: () => console.log('Reminder set') },
-        { text: 'OK', style: 'cancel' }
-      ]
-    );
-  };
+  const navigation = useNavigation();
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>🏜️ Desert Disco Schedule</Text>
-        <Text style={styles.subtitle}>January 16-19, 2025 • Santa Fe, NM</Text>
-      </View>
-
-      {itinerary.map((day) => (
-        <View key={day.id} style={styles.dayContainer}>
+    <View style={styles.container}>
+      <UserHeader />
+      <ScrollView style={styles.scrollContainer}>
+        {/* Friday, January 17 */}
+        <View style={styles.dayCard}>
           <View style={styles.dayHeader}>
-            <Text style={styles.dayTitle}>{day.day}</Text>
-            <Text style={styles.dayDate}>{day.date}</Text>
+            <Text style={styles.dayTitle}>Friday, January 17</Text>
+            <Text style={styles.daySubtitle}>Cozy Night In</Text>
           </View>
-
-          {day.events.map((event, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.eventCard}
-              onPress={() => handleEventPress(event)}
-            >
-              <View style={styles.timeContainer}>
-                <Text style={styles.timeText}>{event.time}</Text>
-              </View>
-              <View style={styles.eventDetails}>
-                <Text style={styles.activityText}>
-                  {event.icon} {event.activity}
+          <View style={styles.dayContent}>
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>Morning</Text>
+                <Text style={styles.eventTitle}>Rolling Arrivals</Text>
+                <Text style={styles.eventDescription}>
+                  Meet at La Dea Santa Fe
                 </Text>
-                <Text style={styles.locationText}>📍 {event.location}</Text>
               </View>
-              <Icon name="notifications" size={20} color={colors.magenta} />
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
+            </View>
 
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          ✨ Ready for an unforgettable weekend in the Land of Enchantment! ✨
-        </Text>
-      </View>
-    </ScrollView>
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>3:00 PM</Text>
+                <Text style={styles.eventTitle}>Check-in</Text>
+                <Text style={styles.eventDescription}>
+                  Official check-in time at La Dea
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>4:30 PM</Text>
+                <Text style={styles.eventTitle}>Walk to Happy Hour</Text>
+                <Text style={styles.eventDescription}>
+                  Nearby spot
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>6:30 PM</Text>
+                <Text style={styles.eventTitle}>Change into Cozies</Text>
+                <Text style={styles.eventDescription}>
+                  Back to the house, get comfortable
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>Evening</Text>
+                <Text style={styles.eventTitle}>Dinner & Drinks at Home</Text>
+                <Text style={styles.eventDescription}>
+                  Cozy night in 
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.orange }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>7:00 PM</Text>
+                <Text style={styles.eventTitle}>Special Guest, Games & Drinks</Text>
+                <Text style={styles.eventDescription}>
+                  Surprise guest appearance! Bring $1 bills.
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Saturday, January 18 */}
+        <View style={styles.dayCard}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayTitle}>Saturday, January 18</Text>
+            <Text style={styles.daySubtitle}>Desert Disco Night!</Text>
+          </View>
+          <View style={styles.dayContent}>
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>Morning</Text>
+                <Text style={styles.eventTitle}>Walk to Coffee</Text>
+                <Text style={styles.eventDescription}>
+                  Neighborhood spot
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>9:00 AM</Text>
+                <Text style={styles.eventTitle}>Walk / Hike</Text>
+                <Text style={styles.eventDescription}>
+                  Scenic walk near Ojo Santa Fe
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>10:30 AM</Text>
+                <Text style={styles.eventTitle}>Ojo Santa Fe Hot Springs</Text>
+                <Text style={styles.eventDescription}>
+                  Relax and soak in the hot springs
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>12:00 PM</Text>
+                <Text style={styles.eventTitle}>Brunch / Lunch</Text>
+                <Text style={styles.eventDescription}>
+                  Grab a bite in town
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>1:00 PM</Text>
+                <Text style={styles.eventTitle}>Home to Shower, Chill, & Change</Text>
+                <Text style={styles.eventDescription}>
+                  Get ready for the evening
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>5:30 PM</Text>
+                <Text style={styles.eventTitle}>Drinks in Town</Text>
+                <Text style={styles.eventDescription}>
+                  Wear Desert Disco attire!
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>7:00 PM</Text>
+                <Text style={styles.eventTitle}>Dinner in Town</Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>9:00 PM</Text>
+                <Text style={styles.eventTitle}>More Drinks & Dancing</Text>
+                <Text style={styles.eventDescription}>
+                  Bring your dancing shoes
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Sunday, January 19 */}
+        <View style={styles.dayCard}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayTitle}>Sunday, January 19</Text>
+            <Text style={styles.daySubtitle}>Scavenger Hunt & Relax Day</Text>
+          </View>
+          <View style={styles.dayContent}>
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.plum }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>10:00 AM</Text>
+                <Text style={styles.eventTitle}>Walk / Hike</Text>
+                <Text style={styles.eventDescription}>
+                  Scenic walk in the neighborhood
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.plum }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>1:00 PM</Text>
+                <Text style={styles.eventTitle}>Drinks / Snacks at La Plazuela</Text>
+                <Text style={styles.eventDescription}>
+                  Afternoon refreshments
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.plum }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>2:30 PM</Text>
+                <Text style={styles.eventTitle}>Scavenger Hunt</Text>
+                <Text style={styles.eventDescription}>
+                  Team competition around Santa Fe
+                </Text>
+                <TouchableOpacity
+                  style={styles.huntButton}
+                  onPress={() => navigation.navigate('Hunt')}
+                >
+                  <Icon name="search" size={18} color="white" />
+                  <Text style={styles.huntButtonText}>Open Scavenger Hunt</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.plum }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>7:00 PM</Text>
+                <Text style={styles.eventTitle}>Dinner at Home</Text>
+
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.plum }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>Evening</Text>
+                <Text style={styles.eventTitle}>Pack & Prep</Text>
+                <Text style={styles.eventDescription}>
+                  Get ready for Monday checkout
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Monday, January 20 */}
+        <View style={styles.dayCard}>
+          <View style={styles.dayHeader}>
+            <Text style={styles.dayTitle}>Monday, January 20</Text>
+            <Text style={styles.daySubtitle}>Departure Day</Text>
+          </View>
+          <View style={styles.dayContent}>
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.oliveGreen }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>11:00 AM</Text>
+                <Text style={styles.eventTitle}>Check-out</Text>
+
+              </View>
+            </View>
+
+            <View style={styles.timelineItem}>
+              <View style={[styles.timelineDot, { backgroundColor: colors.oliveGreen }]} />
+              <View style={styles.timelineContent}>
+                <Text style={styles.timeText}>Safe Travels!</Text>
+                <Text style={styles.eventTitle}>Head Home</Text>
+                <Text style={styles.eventDescription}>
+                  See y'all in Cabo!
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.bottomSpacer} />
+      </ScrollView>
+    </View>
   );
 };
 
@@ -126,100 +300,89 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  header: {
-    backgroundColor: colors.plum,
-    padding: 20,
-    alignItems: 'center',
-    marginBottom: 20,
+  scrollContainer: {
+    flex: 1,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: 'white',
-    marginTop: 5,
-  },
-  dayContainer: {
-    marginHorizontal: 15,
-    marginBottom: 25,
+  dayCard: {
+    backgroundColor: 'white',
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+    overflow: 'hidden',
   },
   dayHeader: {
-    backgroundColor: colors.chartreuse,
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0EDE4',
   },
   dayTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.text,
+    marginBottom: 4,
   },
-  dayDate: {
+  daySubtitle: {
     fontSize: 14,
-    color: colors.text,
+    color: colors.oliveGreen,
     fontWeight: '500',
   },
-  eventCard: {
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 10,
+  dayContent: {
+    padding: 20,
+  },
+  timelineItem: {
     flexDirection: 'row',
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-    borderLeftWidth: 4,
-    borderLeftColor: colors.orange,
+    marginBottom: 24,
   },
-  timeContainer: {
-    backgroundColor: colors.magenta,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 8,
-    marginRight: 15,
-    minWidth: 60,
-    alignItems: 'center',
+  timelineDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    marginTop: 4,
+    marginRight: 16,
   },
-  timeText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 12,
-  },
-  eventDetails: {
+  timelineContent: {
     flex: 1,
   },
-  activityText: {
-    fontSize: 16,
+  timeText: {
+    fontSize: 13,
+    color: colors.oliveGreen,
+    fontWeight: '600',
+    marginBottom: 6,
+  },
+  eventTitle: {
+    fontSize: 17,
     fontWeight: '600',
     color: colors.text,
     marginBottom: 4,
   },
-  locationText: {
+  eventDescription: {
     fontSize: 14,
     color: colors.oliveGreen,
+    lineHeight: 20,
   },
-  footer: {
-    backgroundColor: colors.chartreuse,
-    margin: 15,
-    padding: 20,
-    borderRadius: 10,
+  huntButton: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.magenta,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 10,
+    marginTop: 12,
   },
-  footerText: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: colors.text,
-    textAlign: 'center',
+  huntButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  bottomSpacer: {
+    height: 30,
   },
 });
 
