@@ -16,24 +16,34 @@
       "bundleIdentifier": "com.franxesca.desertdisco",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "runtimeVersion": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.franxesca.desertdisco"
+      "package": "com.franxesca.desertdisco",
+      "runtimeVersion": {
+        "policy": "appVersion"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [],
+    "plugins": [
+      "expo-asset",
+      "expo-font"
+    ],
     "sdkVersion": "52.0.0",
     "extra": {
       "eas": {
         "projectId": "7270f933-501a-43c7-85b2-7d78e884deeb"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7270f933-501a-43c7-85b2-7d78e884deeb"
     }
   }
 }

@@ -209,12 +209,6 @@ const HomeScreen = () => {
               </View>
               <Text style={styles.tipText}>Comfortable walking shoes recommended</Text>
             </View>
-            <View style={styles.tipItem}>
-              <View style={styles.tipIconCircle}>
-                <Icon name="photo-camera" size={16} color={colors.chartreuse} />
-              </View>
-              <Text style={styles.tipText}>Bring your camera for the scavenger hunt</Text>
-            </View>
           </View>
         </View>
 

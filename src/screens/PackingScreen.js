@@ -42,13 +42,13 @@ const PackingScreen = () => {
       { id: 17, name: 'Daytime clothes for brunch/lunch in town', packed: false },
       { id: 18, name: 'Cozy clothes for hanging at home / getting ready', packed: false },
       { id: 19, name: 'Going out clothes (think Disco, color, sparkle) - see Pinterest for inspiration', packed: false, link: 'https://www.pinterest.com/cheboludaaa/desert-disco/' },
+      { id: 20, name: 'Bathing suit', packed: false },
+      { id: 22, name: 'Robe for spa if desired', packed: false },
     ],
     sunday: [
-      { id: 20, name: 'Hiking/walking clothes (can repeat if you don\'t smell bad)', packed: false },
-      { id: 21, name: 'Bathing suit', packed: false },
-      { id: 22, name: 'Robe for spa if desired', packed: false },
-      { id: 23, name: 'Comfortable, warm day clothes for activity', packed: false },
-      { id: 24, name: 'Cozy clothes for at home dinner', packed: false },
+      { id: 21, name: 'Hiking/walking clothes (can repeat if you don\'t smell bad)', packed: false },
+      { id: 22, name: 'Comfortable, warm day clothes for activity', packed: false },
+      { id: 23, name: 'Cozy clothes for at home dinner', packed: false },
     ],
   });
 
@@ -191,8 +191,8 @@ const PackingScreen = () => {
       <View style={styles.tipsContainer}>
         <Text style={styles.tipsTitle}>💡 Santa Fe Packing Tips</Text>
         <Text style={styles.tipsText}>
-          • Layer up! Temps swing 20-30 degrees from day to night{'\n'}
-          • High altitude = dry air (bring moisturizer & lip balm){'\n'}
+          • Layer up! Temperatures swing 20-30 degrees from day to night{'\n'}
+          • High altitude = dry air. Bring moisturizer, sunscreen, & lip balm{'\n'}
           • Walking shoes are a must{'\n'}
         </Text>
       </View>
