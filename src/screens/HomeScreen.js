@@ -211,6 +211,37 @@ const HomeScreen = () => {
             </View>
           </View>
         </View>
+        <TouchableOpacity
+  style={{
+    backgroundColor: colors.magenta,
+    padding: 15,
+    margin: 20,
+    borderRadius: 10,
+    alignItems: 'center'
+  }}
+  onPress={async () => {
+    try {
+      Alert.alert('Initializing...', 'Setting up Firebase collections');
+      
+      // Initialize hunts collection
+      await setDoc(doc(db, 'hunts', 'desert-disco-2025'), {
+        completions: {},
+        createdAt: new Date().toISOString()
+      });
+      
+      // Initialize users collection
+      await setDoc(doc(db, 'users', 'all-users'), {
+        users: [],
+        createdAt: new Date().toISOString()
+      });
+      
+      Alert.alert('✅ Success!', 'Firebase initialized! Check Firebase Console.');
+    } catch (error) {
+      Alert.alert('❌ Error', error.message);
+    }
+  }}
+>
+</TouchableOpacity>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>

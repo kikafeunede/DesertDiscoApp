@@ -1,6 +1,6 @@
 // src/screens/ItineraryScreen.js
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import UserHeader from '../components/UserHeader';
@@ -13,6 +13,10 @@ const colors = {
   magenta: '#ba005f',
   background: '#F5F1E8',
   text: '#2F4F4F',
+};
+
+const openPinterest = () => {
+  Linking.openURL('https://www.pinterest.com/cheboludaaa/desert-disco/');
 };
 
 const ItineraryScreen = () => {
@@ -118,7 +122,7 @@ const ItineraryScreen = () => {
             <View style={styles.timelineItem}>
               <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
               <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>9:00 AM</Text>
+                <Text style={styles.timeText}>10:00 AM</Text>
                 <Text style={styles.eventTitle}>Walk / Hike</Text>
                 <Text style={styles.eventDescription}>
                   Scenic walk near Ojo Santa Fe
@@ -129,7 +133,7 @@ const ItineraryScreen = () => {
             <View style={styles.timelineItem}>
               <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
               <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>10:30 AM</Text>
+                <Text style={styles.timeText}>11:30 AM</Text>
                 <Text style={styles.eventTitle}>Ojo Santa Fe Hot Springs</Text>
                 <Text style={styles.eventDescription}>
                   Relax and soak in the hot springs
@@ -140,8 +144,8 @@ const ItineraryScreen = () => {
             <View style={styles.timelineItem}>
               <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
               <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>12:00 PM</Text>
-                <Text style={styles.eventTitle}>Brunch / Lunch</Text>
+                <Text style={styles.timeText}>1:00 PM</Text>
+                <Text style={styles.eventTitle}>Lunch</Text>
                 <Text style={styles.eventDescription}>
                   Grab a bite in town
                 </Text>
@@ -151,41 +155,15 @@ const ItineraryScreen = () => {
             <View style={styles.timelineItem}>
               <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
               <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>1:00 PM</Text>
-                <Text style={styles.eventTitle}>Home to Shower, Chill, & Change</Text>
-                <Text style={styles.eventDescription}>
-                  Get ready for the evening
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.timelineItem}>
-              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
-              <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>5:30 PM</Text>
-                <Text style={styles.eventTitle}>Drinks in Town</Text>
-                <Text style={styles.eventDescription}>
-                  Wear Desert Disco attire!
-                </Text>
-              </View>
-            </View>
-
-            <View style={styles.timelineItem}>
-              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
-              <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>7:00 PM</Text>
-                <Text style={styles.eventTitle}>Dinner in Town</Text>
-              </View>
-            </View>
-
-            <View style={styles.timelineItem}>
-              <View style={[styles.timelineDot, { backgroundColor: colors.magenta }]} />
-              <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>9:00 PM</Text>
-                <Text style={styles.eventTitle}>More Drinks & Dancing</Text>
-                <Text style={styles.eventDescription}>
-                  Bring your dancing shoes
-                </Text>
+                <Text style={styles.timeText}>6:30 PM</Text>
+                <Text style={styles.eventTitle}>Drinks & Dinner in Town</Text>
+                    <TouchableOpacity
+                      style={styles.pinterestButton}
+                      onPress={openPinterest}
+                    >
+                      <Icon name="style" size={18} color="white" />
+                      <Text style={styles.pinterestButtonText}>View Desert Disco Inspo</Text>
+                   </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -270,7 +248,7 @@ const ItineraryScreen = () => {
             <View style={styles.timelineItem}>
               <View style={[styles.timelineDot, { backgroundColor: colors.oliveGreen }]} />
               <View style={styles.timelineContent}>
-                <Text style={styles.timeText}>11:00 AM</Text>
+                <Text style={styles.timeText}>10:00 AM</Text>
                 <Text style={styles.eventTitle}>Check-out</Text>
 
               </View>
@@ -383,6 +361,22 @@ const styles = StyleSheet.create({
   },
   bottomSpacer: {
     height: 30,
+  },
+  pinterestButton: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: '#E60023',
+  paddingVertical: 12,
+  paddingHorizontal: 16,
+  borderRadius: 10,
+  marginTop: 12,
+  },
+  pinterestButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });
 

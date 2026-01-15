@@ -14,7 +14,7 @@ const colors = {
 };
 
 const UserHeader = () => {
-  const { currentUser } = useUser();
+  const { currentUser, userTeam } = useUser();
 
   if (!currentUser) return null;
 
@@ -25,6 +25,9 @@ const UserHeader = () => {
           <Text style={styles.hiText}>Hi,</Text>
           <Text style={styles.nameText}>{currentUser}</Text>
         </View>
+        {userTeam && (
+          <Text style={styles.teamText}>Team {userTeam}</Text>
+        )}
       </View>
     </View>
   );
@@ -53,6 +56,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: colors.magenta,
+  },
+  teamText: {
+    fontSize: 14,
+    color: colors.plum,
+    marginTop: 4,
+    fontWeight: '600',
   },
 });
 

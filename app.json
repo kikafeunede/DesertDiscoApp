@@ -2,7 +2,7 @@
   "expo": {
     "name": "Desert Disco",
     "slug": "desert-disco-app",
-    "version": "5.0.0",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -14,10 +14,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.franxesca.desertdisco",
+      "buildNumber": "8",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       },
-      "runtimeVersion": "1.0.0"
+      "runtimeVersion": "1.0.0",
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
@@ -34,7 +36,9 @@
     },
     "plugins": [
       "expo-asset",
-      "expo-font"
+      "expo-font",
+      "@react-native-firebase/app",
+      "./plugins/withFirebasePodfile"
     ],
     "sdkVersion": "52.0.0",
     "extra": {

@@ -1,7 +1,6 @@
 // src/screens/WelcomeScreen.js
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { useUser } from '../context/UserContext';
 
 const colors = {
@@ -15,47 +14,70 @@ const colors = {
 };
 
 const WelcomeScreen = () => {
-  const { selectUser, users } = useUser();
+  const { selectUser, allUsers } = useUser();
 
-  const handleSelectUser = (user: any) => {
-    selectUser(user);
+  // YOUR 15 ACTUAL NAMES
+  const allNames = [
+    'Mackenzie', 'Melanie', 'Kenzie', 'Rylee', 'Sydney', 
+    'Kika', 'Kailey', 'Alyssa', 'JD', 'Ellen', 
+    'Mia', 'Sam', 'Hayley', 'Zoey', 'Liz'
+  ];
+
+  // Filter out already selected names
+  const availableNames = allNames.filter(
+    name => !(allUsers || []).some(u => u.name === name)
+  );
+
+  const handleSelectName = async (name) => {
+    if (!name || name.trim() === '') {
+      Alert.alert('Error', 'Please enter a name');
+      return;
+    }
+
+    // Check if name is already taken
+    if ((allUsers || []).some(u => u.name === name)) {
+      Alert.alert('Name Taken', 'This name is already in use. Please choose another.');
+      return;
+    }
+
+    // Check if name is in the list
+    if (!allNames.includes(name)) {
+      Alert.alert('Invalid Name', 'Please choose from the provided names.');
+      return;
+    }
+
+    await selectUser(name.trim());
   };
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.logo}>🏜️</Text>
-        <Text style={styles.title}>Desert Disco</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <Text style={styles.title}>🏜️ Desert Disco</Text>
         <Text style={styles.subtitle}>Santa Fe Bachelorette Weekend</Text>
         <Text style={styles.dates}>January 16-19, 2025</Text>
-      </View>
 
-      <View style={styles.content}>
-        <Text style={styles.welcomeTitle}>Welcome! Who are you?</Text>
-        <Text style={styles.welcomeSubtitle}>
-          Select your name to personalize your trip experience
-        </Text>
+        <Text style={styles.instruction}>Who are you?</Text>
 
-        <ScrollView style={styles.userList}>
-          {users.map((user) => (
+        <View style={styles.namesGrid}>
+          {availableNames.map((name) => (
             <TouchableOpacity
-              key={user}
-              style={styles.userCard}
-              onPress={() => handleSelectUser(user)}
+              key={name}
+              style={styles.nameButton}
+              onPress={() => handleSelectName(name)}
             >
-              <Icon name="person" size={24} color={colors.magenta} />
-              <Text style={styles.userName}>{user}</Text>
-              <Icon name="arrow-forward" size={24} color={colors.oliveGreen} />
+              <Text style={styles.nameButtonText}>{name}</Text>
             </TouchableOpacity>
           ))}
-        </ScrollView>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            Your selection will be saved and you can access your personalized packing list and trip details.
-          </Text>
         </View>
-      </View>
+
+        {(allUsers || []).length > 0 && (
+          <View style={styles.usersCountContainer}>
+            <Text style={styles.usersCountText}>
+              {allUsers.length} of 15 have joined
+            </Text>
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -65,82 +87,71 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  header: {
-    backgroundColor: colors.magenta,
-    padding: 40,
-    alignItems: 'center',
-  },
-  logo: {
-    fontSize: 60,
-    marginBottom: 10,
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    padding: 30,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: 'bold',
-    color: 'white',
-    marginBottom: 8,
+    color: colors.magenta,
+    textAlign: 'center',
+    marginBottom: 10,
   },
   subtitle: {
-    fontSize: 16,
-    color: 'white',
-    marginBottom: 4,
+    fontSize: 18,
+    color: colors.plum,
+    textAlign: 'center',
+    marginBottom: 5,
   },
   dates: {
-    fontSize: 14,
-    color: 'white',
-    opacity: 0.9,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  welcomeTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: colors.text,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  welcomeSubtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.oliveGreen,
-    marginBottom: 20,
     textAlign: 'center',
+    marginBottom: 40,
   },
-  userList: {
-    flex: 1,
+  instruction: {
+    fontSize: 16,
+    color: colors.text,
+    textAlign: 'center',
+    marginBottom: 20,
+    fontWeight: '600',
   },
-  userCard: {
+  namesGrid: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    padding: 18,
-    borderRadius: 12,
-    marginBottom: 10,
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    marginBottom: 30,
+  },
+  nameButton: {
+    backgroundColor: colors.magenta,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 25,
+    margin: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  userName: {
-    flex: 1,
-    fontSize: 18,
-    color: colors.text,
-    fontWeight: '600',
-    marginLeft: 15,
-  },
-  footer: {
-    backgroundColor: colors.plum,
-    padding: 15,
-    borderRadius: 12,
-    marginTop: 20,
-  },
-  footerText: {
-    fontSize: 13,
+  nameButtonText: {
     color: 'white',
-    textAlign: 'center',
-    lineHeight: 20,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  usersCountContainer: {
+    marginTop: 30,
+    padding: 15,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  usersCountText: {
+    fontSize: 14,
+    color: colors.plum,
+    fontWeight: '600',
   },
 });
 
