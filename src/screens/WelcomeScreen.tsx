@@ -1,7 +1,9 @@
 // src/screens/WelcomeScreen.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useUser } from '../context/UserContext';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const colors = {
   chartreuse: '#bcaa01',
@@ -13,70 +15,150 @@ const colors = {
   text: '#2F4F4F',
 };
 
-const WelcomeScreen = () => {
-  const { selectUser, allUsers } = useUser();
+const WelcomeScreen = ({ navigation }) => {
+  const { setCurrentUser, setUserTeam, allUsers } = useUser();
+  const [selectedName, setSelectedName] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // YOUR 15 ACTUAL NAMES
-  const allNames = [
-    'Mackenzie', 'Melanie', 'Kenzie', 'Rylee', 'Sydney', 
-    'Kika', 'Kailey', 'Alyssa', 'JD', 'Ellen', 
-    'Mia', 'Sam', 'Hayley', 'Zoey', 'Liz'
-  ];
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
 
-  // Filter out already selected names
-  const availableNames = allNames.filter(
-    name => !(allUsers || []).some(u => u.name === name)
-  );
+  const checkLoginStatus = async () => {
+    try {
+      const savedUser = await AsyncStorage.getItem('currentUser');
+      if (savedUser) {
+        setIsLoggedIn(true);
+        setSelectedName(savedUser);
+      }
+    } catch (error) {
+      console.log('Error checking login status:', error);
+    }
+  };
 
-  const handleSelectName = async (name) => {
-    if (!name || name.trim() === '') {
-      Alert.alert('Error', 'Please enter a name');
+  const handleSelectName = (name) => {
+    setSelectedName(name);
+  };
+
+  const handleContinue = async () => {
+    if (!selectedName) {
+      Alert.alert('Select Your Name', 'Please select your name to continue');
       return;
     }
 
-    // Check if name is already taken
-    if ((allUsers || []).some(u => u.name === name)) {
-      Alert.alert('Name Taken', 'This name is already in use. Please choose another.');
-      return;
+    try {
+      await AsyncStorage.setItem('currentUser', selectedName);
+      const user = allUsers.find(u => u.name === selectedName);
+      if (user) {
+        setCurrentUser(selectedName);
+        setUserTeam(user.team);
+        navigation.replace('Main');
+      }
+    } catch (error) {
+      console.log('Error saving user:', error);
+      Alert.alert('Error', 'Could not save your selection. Please try again.');
     }
+  };
 
-    // Check if name is in the list
-    if (!allNames.includes(name)) {
-      Alert.alert('Invalid Name', 'Please choose from the provided names.');
-      return;
-    }
-
-    await selectUser(name.trim());
+  const handleLogout = () => {
+    Alert.alert(
+      'Change Name',
+      'Do you want to select a different name?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Yes, Change',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.removeItem('currentUser');
+              setIsLoggedIn(false);
+              setSelectedName(null);
+            } catch (error) {
+              console.log('Error logging out:', error);
+            }
+          }
+        }
+      ]
+    );
   };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>🏜️ Desert Disco</Text>
-        <Text style={styles.subtitle}>Santa Fe Bachelorette Weekend</Text>
-        <Text style={styles.dates}>January 16-19, 2025</Text>
-
-        <Text style={styles.instruction}>Who are you?</Text>
-
-        <View style={styles.namesGrid}>
-          {availableNames.map((name) => (
-            <TouchableOpacity
-              key={name}
-              style={styles.nameButton}
-              onPress={() => handleSelectName(name)}
-            >
-              <Text style={styles.nameButtonText}>{name}</Text>
-            </TouchableOpacity>
-          ))}
+        <View style={styles.header}>
+          <Text style={styles.title}>🌵 Desert Disco 🌵</Text>
+          <Text style={styles.subtitle}>Santa Fe Bachelorette Weekend</Text>
+          <Text style={styles.dates}>January 17-20, 2025</Text>
         </View>
 
-        {(allUsers || []).length > 0 && (
-          <View style={styles.usersCountContainer}>
-            <Text style={styles.usersCountText}>
-              {allUsers.length} of 15 have joined
-            </Text>
+        {isLoggedIn && (
+          <View style={styles.loggedInBanner}>
+            <View style={styles.loggedInInfo}>
+              <Icon name="check-circle" size={24} color={colors.chartreuse} />
+              <Text style={styles.loggedInText}>Logged in as {selectedName}</Text>
+            </View>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Icon name="edit" size={20} color={colors.magenta} />
+              <Text style={styles.logoutButtonText}>Change</Text>
+            </TouchableOpacity>
           </View>
         )}
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>
+            {isLoggedIn ? 'Or select a different name:' : 'Who are you?'}
+          </Text>
+          <Text style={styles.sectionSubtitle}>Select your name to continue</Text>
+
+          <View style={styles.namesGrid}>
+            {allUsers.map((user) => (
+              <TouchableOpacity
+                key={user.name}
+                style={[
+                  styles.nameCard,
+                  selectedName === user.name && styles.nameCardSelected,
+                ]}
+                onPress={() => handleSelectName(user.name)}
+              >
+                <View style={styles.nameCardContent}>
+                  <Text style={[
+                    styles.nameText,
+                    selectedName === user.name && styles.nameTextSelected
+                  ]}>
+                    {user.name}
+                  </Text>
+                  <Text style={[
+                    styles.teamText,
+                    selectedName === user.name && styles.teamTextSelected
+                  ]}>
+                    Team {user.team}
+                  </Text>
+                  {user.hasLoggedIn && (
+                    <View style={styles.loggedInBadge}>
+                      <Icon name="check-circle" size={14} color={colors.chartreuse} />
+                      <Text style={styles.loggedInBadgeText}>Active</Text>
+                    </View>
+                  )}
+                </View>
+                {selectedName === user.name && (
+                  <Icon name="check-circle" size={28} color={colors.chartreuse} style={styles.checkIcon} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={[styles.continueButton, !selectedName && styles.continueButtonDisabled]}
+          onPress={handleContinue}
+          disabled={!selectedName}
+        >
+          <Text style={styles.continueButtonText}>
+            {isLoggedIn ? 'Continue' : 'Let\'s Go!'}
+          </Text>
+          <Icon name="arrow-forward" size={24} color="white" />
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -88,70 +170,163 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   scrollContent: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 30,
+    padding: 20,
+    paddingBottom: 40,
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 30,
+    marginTop: 40,
   },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
     color: colors.magenta,
-    textAlign: 'center',
     marginBottom: 10,
+    textAlign: 'center',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.plum,
-    textAlign: 'center',
     marginBottom: 5,
+    textAlign: 'center',
   },
   dates: {
     fontSize: 16,
     color: colors.oliveGreen,
     textAlign: 'center',
-    marginBottom: 40,
   },
-  instruction: {
-    fontSize: 16,
-    color: colors.text,
-    textAlign: 'center',
+  loggedInBanner: {
+    backgroundColor: 'white',
+    padding: 16,
+    borderRadius: 12,
     marginBottom: 20,
-    fontWeight: '600',
-  },
-  namesGrid: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    marginBottom: 30,
-  },
-  nameButton: {
-    backgroundColor: colors.magenta,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 25,
-    margin: 5,
+    alignItems: 'center',
+    justifyContent: 'space-between',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
   },
-  nameButtonText: {
-    color: 'white',
+  loggedInInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  loggedInText: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.text,
+    marginLeft: 10,
   },
-  usersCountContainer: {
-    marginTop: 30,
-    padding: 15,
-    backgroundColor: 'white',
-    borderRadius: 10,
+  logoutButton: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: colors.background,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
   },
-  usersCountText: {
+  logoutButtonText: {
     fontSize: 14,
+    fontWeight: '600',
+    color: colors.magenta,
+    marginLeft: 6,
+  },
+  section: {
+    marginBottom: 30,
+  },
+  sectionTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 5,
+  },
+  sectionSubtitle: {
+    fontSize: 16,
+    color: colors.oliveGreen,
+    marginBottom: 20,
+  },
+  namesGrid: {
+    gap: 12,
+  },
+  nameCard: {
+    backgroundColor: 'white',
+    padding: 18,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  nameCardSelected: {
+    borderColor: colors.chartreuse,
+    backgroundColor: '#f8fef0',
+  },
+  nameCardContent: {
+    flex: 1,
+  },
+  nameText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 4,
+  },
+  nameTextSelected: {
+    color: colors.magenta,
+  },
+  teamText: {
+    fontSize: 14,
+    color: colors.oliveGreen,
+  },
+  teamTextSelected: {
     color: colors.plum,
     fontWeight: '600',
+  },
+  loggedInBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+  },
+  loggedInBadgeText: {
+    fontSize: 12,
+    color: colors.chartreuse,
+    marginLeft: 4,
+    fontWeight: '600',
+  },
+  checkIcon: {
+    marginLeft: 10,
+  },
+  continueButton: {
+    backgroundColor: colors.magenta,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 18,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
+  },
+  continueButtonDisabled: {
+    backgroundColor: colors.oliveGreen,
+    opacity: 0.5,
+  },
+  continueButtonText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginRight: 10,
   },
 });
 

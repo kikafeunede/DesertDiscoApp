@@ -49,6 +49,31 @@ const HomeScreen = () => {
                 <Text style={styles.checkInValue}>Mon 11:00 AM</Text>
               </View>
             </View>
+
+            {/* WiFi & Gate Code Section */}
+            <View style={styles.accessInfoContainer}>
+              <View style={styles.accessItem}>
+                <Icon name="wifi" size={18} color={colors.plum} />
+                <View style={styles.accessTextContainer}>
+                  <Text style={styles.accessLabel}>WiFi</Text>
+                  <Text style={styles.accessValue}>La Dea</Text>
+                </View>
+              </View>
+              <View style={styles.accessItem}>
+                <Icon name="lock" size={18} color={colors.plum} />
+                <View style={styles.accessTextContainer}>
+                  <Text style={styles.accessLabel}>Password</Text>
+                  <Text style={styles.accessValue}>caminorealness</Text>
+                </View>
+              </View>
+              <View style={styles.accessItem}>
+                <Icon name="dialpad" size={18} color={colors.plum} />
+                <View style={styles.accessTextContainer}>
+                  <Text style={styles.accessLabel}>Gate Code</Text>
+                  <Text style={styles.accessValue}>4547#</Text>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
 
@@ -211,37 +236,6 @@ const HomeScreen = () => {
             </View>
           </View>
         </View>
-        <TouchableOpacity
-  style={{
-    backgroundColor: colors.magenta,
-    padding: 15,
-    margin: 20,
-    borderRadius: 10,
-    alignItems: 'center'
-  }}
-  onPress={async () => {
-    try {
-      Alert.alert('Initializing...', 'Setting up Firebase collections');
-      
-      // Initialize hunts collection
-      await setDoc(doc(db, 'hunts', 'desert-disco-2025'), {
-        completions: {},
-        createdAt: new Date().toISOString()
-      });
-      
-      // Initialize users collection
-      await setDoc(doc(db, 'users', 'all-users'), {
-        users: [],
-        createdAt: new Date().toISOString()
-      });
-      
-      Alert.alert('✅ Success!', 'Firebase initialized! Check Firebase Console.');
-    } catch (error) {
-      Alert.alert('❌ Error', error.message);
-    }
-  }}
->
-</TouchableOpacity>
 
         <View style={styles.bottomSpacer} />
       </ScrollView>
@@ -312,6 +306,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderLeftWidth: 3,
     borderLeftColor: colors.chartreuse,
+    marginBottom: 16,
   },
   checkInBox: {
     flex: 1,
@@ -330,6 +325,37 @@ const styles = StyleSheet.create({
   },
   checkInValue: {
     fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+  },
+  accessInfoContainer: {
+    backgroundColor: '#F8F5F0',
+    borderRadius: 12,
+    padding: 16,
+    borderLeftWidth: 3,
+    borderLeftColor: colors.plum,
+  },
+  accessItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  accessItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  accessTextContainer: {
+    marginLeft: 12,
+  },
+  accessLabel: {
+    fontSize: 12,
+    color: colors.oliveGreen,
+    fontWeight: '500',
+    marginBottom: 2,
+  },
+  accessValue: {
+    fontSize: 15,
     fontWeight: '600',
     color: colors.text,
   },
