@@ -1,6 +1,20 @@
 // src/screens/ScavengerHuntScreen.js
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, TextInput, Alert, Image } from 'react-native';
+import { 
+  View, 
+  Text, 
+  ScrollView, 
+  StyleSheet, 
+  TouchableOpacity, 
+  Modal, 
+  TextInput, 
+  Alert, 
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
@@ -196,14 +210,10 @@ const ScavengerHuntScreen = () => {
     { id: 78, title: 'Tarot Shop', description: 'Find a tarot or metaphysical shop', location: 'Downtown', points: 15, category: 'Mystical' },
     { id: 79, title: 'Prayer Flags', description: 'Locate prayer flags (Tibetan, common in Santa Fe)', location: 'Outdoors', points: 10, category: 'Mystical' },
     { id: 80, title: 'Labyrinth', description: 'Find a labyrinth or mandala anywhere in town', location: 'Outdoors', points: 20, category: 'Mystical' },
-
-    { id: 81, title: 'Find a Matt', description: 'Take a photo with someone named Matt', location: 'Downtown', points: 20, category: 'Silly' },
-    { id: 82, title: 'Find a Bride', description: 'Take a photo with another bride', location: 'Downtown', points: 20, category: 'Silly' },
   ]);
 
-  
   const teams = ['Green Chiles', 'Sopaipillas', 'Frito Pies'];
-  const categories = ['Historic Plaza', 'Canyon Road', 'Railyard', 'Outdoors', 'Food', 'Shopping', 'Mystical', 'Silly'];
+  const categories = ['Historic Plaza', 'Canyon Road', 'Railyard', 'Outdoors', 'Food', 'Shopping', 'Mystical'];
 
   const handleLogin = async () => {
     if (loginCode === '459-WILD') {
@@ -425,7 +435,6 @@ const ScavengerHuntScreen = () => {
       'Food': colors.orange,
       'Shopping': colors.chartreuse,
       'Mystical': colors.plum,
-      'Silly': colors.magenta,
     };
     return categoryColors[category] || colors.oliveGreen;
   };
@@ -945,82 +954,108 @@ const ScavengerHuntScreen = () => {
         visible={addClueModalVisible}
         onRequestClose={() => setAddClueModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add New Clue</Text>
-              <TouchableOpacity onPress={() => setAddClueModalVisible(false)}>
-                <Icon name="close" size={24} color={colors.text} />
-              </TouchableOpacity>
-            </View>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Add New Clue</Text>
+                    <TouchableOpacity onPress={() => {
+                      Keyboard.dismiss();
+                      setAddClueModalVisible(false);
+                    }}>
+                      <Icon name="close" size={24} color={colors.text} />
+                    </TouchableOpacity>
+                  </View>
 
-            <ScrollView style={styles.formContainer}>
-              <Text style={styles.inputLabel}>Clue Title</Text>
-              <TextInput
-                style={styles.textInput}
-                value={newClue.title}
-                onChangeText={(text) => setNewClue({...newClue, title: text})}
-                placeholder="e.g., Find the Turquoise Treasure"
-                placeholderTextColor={colors.oliveGreen}
-              />
-
-              <Text style={styles.inputLabel}>Description</Text>
-              <TextInput
-                style={[styles.textInput, styles.textArea]}
-                value={newClue.description}
-                onChangeText={(text) => setNewClue({...newClue, description: text})}
-                placeholder="What do they need to find or do?"
-                placeholderTextColor={colors.oliveGreen}
-                multiline
-                numberOfLines={3}
-              />
-
-              <Text style={styles.inputLabel}>Location</Text>
-              <TextInput
-                style={styles.textInput}
-                value={newClue.location}
-                onChangeText={(text) => setNewClue({...newClue, location: text})}
-                placeholder="e.g., Santa Fe Plaza"
-                placeholderTextColor={colors.oliveGreen}
-              />
-
-              <Text style={styles.inputLabel}>Points</Text>
-              <TextInput
-                style={styles.textInput}
-                value={newClue.points}
-                onChangeText={(text) => setNewClue({...newClue, points: text})}
-                placeholder="10"
-                keyboardType="numeric"
-                placeholderTextColor={colors.oliveGreen}
-              />
-
-              <Text style={styles.inputLabel}>Category</Text>
-              <View style={styles.categorySelector}>
-                {categories.map(category => (
-                  <TouchableOpacity
-                    key={category}
-                    style={[
-                      styles.categoryButton,
-                      { backgroundColor: newClue.category === category ? getCategoryColor(category) : '#f0f0f0' }
-                    ]}
-                    onPress={() => setNewClue({...newClue, category})}
+                  <ScrollView 
+                    style={styles.formContainer}
+                    keyboardShouldPersistTaps="handled"
                   >
-                    <Text style={[
-                      styles.categoryButtonText,
-                      { color: newClue.category === category ? 'white' : colors.text }
-                    ]}>
-                      {category}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
+                    <Text style={styles.inputLabel}>Clue Title</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={newClue.title}
+                      onChangeText={(text) => setNewClue({...newClue, title: text})}
+                      placeholder="e.g., Find the Turquoise Treasure"
+                      placeholderTextColor={colors.oliveGreen}
+                      returnKeyType="next"
+                    />
 
-              <TouchableOpacity style={styles.submitButton} onPress={addClue}>
-                <Text style={styles.submitButtonText}>Add Clue</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </View>
+                    <Text style={styles.inputLabel}>Description</Text>
+                    <TextInput
+                      style={[styles.textInput, styles.textArea]}
+                      value={newClue.description}
+                      onChangeText={(text) => setNewClue({...newClue, description: text})}
+                      placeholder="What do they need to find or do?"
+                      placeholderTextColor={colors.oliveGreen}
+                      multiline
+                      numberOfLines={3}
+                      returnKeyType="next"
+                    />
+
+                    <Text style={styles.inputLabel}>Location</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={newClue.location}
+                      onChangeText={(text) => setNewClue({...newClue, location: text})}
+                      placeholder="e.g., Santa Fe Plaza"
+                      placeholderTextColor={colors.oliveGreen}
+                      returnKeyType="next"
+                    />
+
+                    <Text style={styles.inputLabel}>Points</Text>
+                    <TextInput
+                      style={styles.textInput}
+                      value={newClue.points}
+                      onChangeText={(text) => setNewClue({...newClue, points: text})}
+                      placeholder="10"
+                      keyboardType="numeric"
+                      placeholderTextColor={colors.oliveGreen}
+                      returnKeyType="done"
+                      onSubmitEditing={Keyboard.dismiss}
+                    />
+
+                    <Text style={styles.inputLabel}>Category</Text>
+                    <View style={styles.categorySelector}>
+                      {categories.map(category => (
+                        <TouchableOpacity
+                          key={category}
+                          style={[
+                            styles.categoryButton,
+                            { backgroundColor: newClue.category === category ? getCategoryColor(category) : '#f0f0f0' }
+                          ]}
+                          onPress={() => setNewClue({...newClue, category})}
+                        >
+                          <Text style={[
+                            styles.categoryButtonText,
+                            { color: newClue.category === category ? 'white' : colors.text }
+                          ]}>
+                            {category}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+
+                    <TouchableOpacity 
+                      style={styles.submitButton} 
+                      onPress={() => {
+                        Keyboard.dismiss();
+                        addClue();
+                      }}
+                    >
+                      <Text style={styles.submitButtonText}>Add Clue</Text>
+                    </TouchableOpacity>
+                  </ScrollView>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
 
       {/* Edit Clue Modal */}
@@ -1030,84 +1065,110 @@ const ScavengerHuntScreen = () => {
         visible={editClueModalVisible}
         onRequestClose={() => setEditClueModalVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Edit Clue</Text>
-              <TouchableOpacity onPress={() => setEditClueModalVisible(false)}>
-                <Icon name="close" size={24} color={colors.text} />
-              </TouchableOpacity>
-            </View>
-
-            {selectedClue && (
-              <ScrollView style={styles.formContainer}>
-                <Text style={styles.inputLabel}>Clue Title</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={selectedClue.title}
-                  onChangeText={(text) => setSelectedClue({...selectedClue, title: text})}
-                  placeholder="e.g., Find the Turquoise Treasure"
-                  placeholderTextColor={colors.oliveGreen}
-                />
-
-                <Text style={styles.inputLabel}>Description</Text>
-                <TextInput
-                  style={[styles.textInput, styles.textArea]}
-                  value={selectedClue.description}
-                  onChangeText={(text) => setSelectedClue({...selectedClue, description: text})}
-                  placeholder="What do they need to find or do?"
-                  placeholderTextColor={colors.oliveGreen}
-                  multiline
-                  numberOfLines={3}
-                />
-
-                <Text style={styles.inputLabel}>Location</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={selectedClue.location}
-                  onChangeText={(text) => setSelectedClue({...selectedClue, location: text})}
-                  placeholder="e.g., Santa Fe Plaza"
-                  placeholderTextColor={colors.oliveGreen}
-                />
-
-                <Text style={styles.inputLabel}>Points</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={String(selectedClue.points)}
-                  onChangeText={(text) => setSelectedClue({...selectedClue, points: parseInt(text) || 10})}
-                  placeholder="10"
-                  keyboardType="numeric"
-                  placeholderTextColor={colors.oliveGreen}
-                />
-
-                <Text style={styles.inputLabel}>Category</Text>
-                <View style={styles.categorySelector}>
-                  {categories.map(category => (
-                    <TouchableOpacity
-                      key={category}
-                      style={[
-                        styles.categoryButton,
-                        { backgroundColor: selectedClue.category === category ? getCategoryColor(category) : '#f0f0f0' }
-                      ]}
-                      onPress={() => setSelectedClue({...selectedClue, category})}
-                    >
-                      <Text style={[
-                        styles.categoryButtonText,
-                        { color: selectedClue.category === category ? 'white' : colors.text }
-                      ]}>
-                        {category}
-                      </Text>
+        <KeyboardAvoidingView 
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={styles.modalOverlay}
+        >
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback onPress={(e) => e.stopPropagation()}>
+                <View style={styles.modalContent}>
+                  <View style={styles.modalHeader}>
+                    <Text style={styles.modalTitle}>Edit Clue</Text>
+                    <TouchableOpacity onPress={() => {
+                      Keyboard.dismiss();
+                      setEditClueModalVisible(false);
+                    }}>
+                      <Icon name="close" size={24} color={colors.text} />
                     </TouchableOpacity>
-                  ))}
-                </View>
+                  </View>
 
-                <TouchableOpacity style={styles.submitButton} onPress={editClue}>
-                  <Text style={styles.submitButtonText}>Save Changes</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            )}
-          </View>
-        </View>
+                  {selectedClue && (
+                    <ScrollView 
+                      style={styles.formContainer}
+                      keyboardShouldPersistTaps="handled"
+                    >
+                      <Text style={styles.inputLabel}>Clue Title</Text>
+                      <TextInput
+                        style={styles.textInput}
+                        value={selectedClue.title}
+                        onChangeText={(text) => setSelectedClue({...selectedClue, title: text})}
+                        placeholder="e.g., Find the Turquoise Treasure"
+                        placeholderTextColor={colors.oliveGreen}
+                        returnKeyType="next"
+                      />
+
+                      <Text style={styles.inputLabel}>Description</Text>
+                      <TextInput
+                        style={[styles.textInput, styles.textArea]}
+                        value={selectedClue.description}
+                        onChangeText={(text) => setSelectedClue({...selectedClue, description: text})}
+                        placeholder="What do they need to find or do?"
+                        placeholderTextColor={colors.oliveGreen}
+                        multiline
+                        numberOfLines={3}
+                        returnKeyType="next"
+                      />
+
+                      <Text style={styles.inputLabel}>Location</Text>
+                      <TextInput
+                        style={styles.textInput}
+                        value={selectedClue.location}
+                        onChangeText={(text) => setSelectedClue({...selectedClue, location: text})}
+                        placeholder="e.g., Santa Fe Plaza"
+                        placeholderTextColor={colors.oliveGreen}
+                        returnKeyType="next"
+                      />
+
+                      <Text style={styles.inputLabel}>Points</Text>
+                      <TextInput
+                        style={styles.textInput}
+                        value={String(selectedClue.points)}
+                        onChangeText={(text) => setSelectedClue({...selectedClue, points: parseInt(text) || 10})}
+                        placeholder="10"
+                        keyboardType="numeric"
+                        placeholderTextColor={colors.oliveGreen}
+                        returnKeyType="done"
+                        onSubmitEditing={Keyboard.dismiss}
+                      />
+
+                      <Text style={styles.inputLabel}>Category</Text>
+                      <View style={styles.categorySelector}>
+                        {categories.map(category => (
+                          <TouchableOpacity
+                            key={category}
+                            style={[
+                              styles.categoryButton,
+                              { backgroundColor: selectedClue.category === category ? getCategoryColor(category) : '#f0f0f0' }
+                            ]}
+                            onPress={() => setSelectedClue({...selectedClue, category})}
+                          >
+                            <Text style={[
+                              styles.categoryButtonText,
+                              { color: selectedClue.category === category ? 'white' : colors.text }
+                            ]}>
+                              {category}
+                            </Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+
+                      <TouchableOpacity 
+                        style={styles.submitButton} 
+                        onPress={() => {
+                          Keyboard.dismiss();
+                          editClue();
+                        }}
+                      >
+                        <Text style={styles.submitButtonText}>Save Changes</Text>
+                      </TouchableOpacity>
+                    </ScrollView>
+                  )}
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );

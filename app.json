@@ -18,7 +18,8 @@
         "ITSAppUsesNonExemptEncryption": false
       },
       "runtimeVersion": "1.0.0",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "2"
     },
     "android": {
       "adaptiveIcon": {
